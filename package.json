@@ -1,0 +1,27 @@
+{
+  "name": "jira-desktop-client",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "lint": "tslint -c tslint.json -p tsconfig.json",
+    "start": "npm run build && electron ./dist/main.js"
+  },
+  "repository": "",
+  "keywords": [
+    "Electron"
+  ],
+  "author": "Yeung Yiu Hung",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^3.0.9",
+    "tslint": "^5.10.0",
+    "typescript": "^2.8.3"
+  },
+  "dependencies": {
+    "@material-ui/core": "^3.5.1",
+    "react": "^16.6.3",
+    "react-dom": "^16.6.3"
+  }
+}
