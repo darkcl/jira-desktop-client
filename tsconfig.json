@@ -4,8 +4,8 @@
     "jsx": "react",
     "module": "ESNext",
     "moduleResolution": "node",
-    "noImplicitAny": true,
-    "noImplicitThis": true,
+    "noImplicitAny": false,
+    "noImplicitThis": false,
     "sourceMap": true,
     "target": "es2017"
   },
