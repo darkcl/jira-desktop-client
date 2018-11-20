@@ -2,11 +2,12 @@
   "name": "jira-desktop-client",
   "version": "1.0.0",
   "description": "",
-  "main": "./dist/main.bundle.js",
+  "main": "./dist/main/main.js",
   "scripts": {
-    "start": "cp ./src/renderer/index.html ./dist/main/index.html; electron ./dist/main/main.js",
-    "dev": "tsc -p ./ -w",
-    "production": "tsc -p ./"
+    "build": "tsc -p ./; cp ./src/renderer/index.html ./dist/main/index.html",
+    "start": "electron ./dist/main/main.js",
+    "watch": "tsc -p ./ -w",
+    "package": "tsc -p ./"
   },
   "repository": "",
   "keywords": [
