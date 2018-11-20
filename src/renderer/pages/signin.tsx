@@ -19,8 +19,6 @@ const app = remote.app;
 const BrowserWindow = remote.BrowserWindow;
 const dialog = remote.dialog;
 
-import { JIRA } from "../utils/jira-client";
-
 const styles = (theme: Theme) =>
   createStyles({
     main: {
