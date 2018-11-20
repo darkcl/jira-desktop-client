@@ -5,6 +5,8 @@ import * as url from "url";
 
 let mainWindow: Electron.BrowserWindow;
 
+require("electron-reload")(__dirname);
+
 function createWindow() {
   // Create the browser window.
   mainWindow = new BrowserWindow({
@@ -60,6 +62,7 @@ app.on("activate", () => {
 
 ipcMain.on("save-auth", (event, payload) => {
   console.log(payload);
+  event.returnValue = "pong12";
 });
 
 // In this file you can include the rest of your app"s specific main process

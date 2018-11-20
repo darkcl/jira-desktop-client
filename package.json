@@ -4,7 +4,7 @@
   "description": "",
   "main": "./dist/main.bundle.js",
   "scripts": {
-    "start": "cp ./src/index.html ./dist/main/index.html electron ./dist/main/main.js",
+    "start": "cp ./src/index.html ./dist/main/index.html; electron ./dist/main/main.js",
     "dev": "tsc -p ./ -w",
     "production": "tsc -p ./"
   },
