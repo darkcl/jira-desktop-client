@@ -4,9 +4,9 @@
   "description": "",
   "main": "./dist/main.bundle.js",
   "scripts": {
-    "start": "electron ./dist/main.bundle.js",
-    "dev": "rimraf dist && webpack --watch --config ./webpack.dev.js --progress --colors",
-    "production": "rimraf dist && webpack --config ./webpack.prod.js --progress --colors"
+    "start": "cp ./src/index.html ./dist/main/index.html electron ./dist/main/main.js",
+    "dev": "tsc -p ./ -w",
+    "production": "tsc -p ./"
   },
   "repository": "",
   "keywords": [
@@ -15,20 +15,17 @@
   "author": "Yeung Yiu Hung",
   "license": "MIT",
   "devDependencies": {
-    "@babel/cli": "^7.1.5",
-    "@babel/core": "^7.1.5",
-    "@babel/preset-es2015": "^7.0.0",
-    "@babel/preset-react": "^7.0.0",
     "@types/electron": "^1.6.10",
     "@types/node": "^10.12.6",
     "@types/react": "^16.7.3",
     "@types/react-dom": "^16.0.9",
-    "babel-loader": "^8.0.4",
+    "copy-webpack-plugin": "^4.6.0",
     "css-loader": "^1.0.1",
     "electron": "^3.0.9",
     "electron-reload": "^1.3.0",
     "file-loader": "^2.0.0",
     "html-webpack-plugin": "^3.2.0",
+    "node-loader": "^0.6.0",
     "node-sass": "^4.10.0",
     "prettier": "^1.15.2",
     "rimraf": "^2.6.2",
@@ -39,9 +36,7 @@
     "tslint": "^5.11.0",
     "tslint-config-standard": "^8.0.1",
     "tslint-loader": "^3.5.4",
-    "typescript": "^3.1.6",
-    "webpack": "^4.25.1",
-    "webpack-cli": "^3.1.2"
+    "typescript": "^3.1.6"
   },
   "dependencies": {
     "@material-ui/core": "^3.5.1",

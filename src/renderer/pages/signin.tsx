@@ -1,5 +1,4 @@
-import React from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -13,6 +12,12 @@ import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import withStyles from "@material-ui/core/styles/withStyles";
 import { createStyles, Theme } from "@material-ui/core";
+
+import { ipcRenderer, remote } from "electron";
+
+const app = remote.app;
+const BrowserWindow = remote.BrowserWindow;
+const dialog = remote.dialog;
 
 import { JIRA } from "../utils/jira-client";
 
@@ -55,9 +60,26 @@ export interface SignInProps {
   classes: any;
 }
 
-class SignIn extends React.Component<SignInProps, {}> {
+export interface SignInState {
+  email: string;
+  password: string;
+}
+
+class SignIn extends React.Component<SignInProps, SignInState> {
+  constructor(props) {
+    super(props);
+    this.state = {
+      email: "",
+      password: ""
+    };
+  }
+
   handleChange(event) {
-    console.log(`[${event.target.name}]: ${event.target.value}`);
+    if (event.target.id === "email") {
+      this.setState({ email: event.target.value });
+    } else if (event.target.id === "password") {
+      this.setState({ password: event.target.value });
+    }
   }
 
   render() {
@@ -79,6 +101,7 @@ class SignIn extends React.Component<SignInProps, {}> {
                 id="email"
                 name="email"
                 autoComplete="email"
+                value={this.state.email}
                 autoFocus
                 onChange={event => this.handleChange(event)}
               />
@@ -89,6 +112,7 @@ class SignIn extends React.Component<SignInProps, {}> {
                 name="password"
                 type="password"
                 id="password"
+                value={this.state.password}
                 autoComplete="current-password"
                 onChange={event => this.handleChange(event)}
               />
@@ -98,11 +122,11 @@ class SignIn extends React.Component<SignInProps, {}> {
               label="Remember me"
             />
             <Button
-              type="submit"
               fullWidth
               variant="contained"
               color="primary"
               className={classes.submit}
+              onClick={event => this.handleSubmit(event)}
             >
               Sign in
             </Button>
@@ -110,6 +134,11 @@ class SignIn extends React.Component<SignInProps, {}> {
         </Paper>
       </main>
     );
+  }
+
+  handleSubmit(event): void {
+    console.log(this.state);
+    ipcRenderer.sendSync("save-auth", this.state);
   }
 }
 
