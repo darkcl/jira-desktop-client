@@ -2,6 +2,7 @@ import { app, BrowserWindow, ipcMain } from "electron";
 
 import * as path from "path";
 import * as url from "url";
+import { KeychainManger } from "./utils/keychain";
 
 let mainWindow: Electron.BrowserWindow;
 
@@ -62,7 +63,13 @@ app.on("activate", () => {
 
 ipcMain.on("save-auth", (event, payload) => {
   console.log(payload);
-  event.returnValue = "pong12";
+  const keychainManager: KeychainManger = new KeychainManger(
+    payload.host,
+    payload.email,
+    payload.password
+  );
+  keychainManager.save();
+  event.returnValue = "OK";
 });
 
 // In this file you can include the rest of your app"s specific main process

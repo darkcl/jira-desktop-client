@@ -61,6 +61,7 @@ export interface SignInProps {
 export interface SignInState {
   email: string;
   password: string;
+  host: string;
 }
 
 class SignIn extends React.Component<SignInProps, SignInState> {
@@ -68,12 +69,15 @@ class SignIn extends React.Component<SignInProps, SignInState> {
     super(props);
     this.state = {
       email: "",
-      password: ""
+      password: "",
+      host: ""
     };
   }
 
   handleChange(event) {
-    if (event.target.id === "email") {
+    if (event.target.id === "host") {
+      this.setState({ host: event.target.value });
+    } else if (event.target.id === "email") {
       this.setState({ email: event.target.value });
     } else if (event.target.id === "password") {
       this.setState({ password: event.target.value });
@@ -94,13 +98,22 @@ class SignIn extends React.Component<SignInProps, SignInState> {
           </Typography>
           <form className={classes.form}>
             <FormControl margin="normal" required fullWidth>
+              <InputLabel htmlFor="email">JIRA Host</InputLabel>
+              <Input
+                id="host"
+                name="host"
+                value={this.state.host}
+                autoFocus
+                onChange={event => this.handleChange(event)}
+              />
+            </FormControl>
+            <FormControl margin="normal" required fullWidth>
               <InputLabel htmlFor="email">Email Address</InputLabel>
               <Input
                 id="email"
                 name="email"
                 autoComplete="email"
                 value={this.state.email}
-                autoFocus
                 onChange={event => this.handleChange(event)}
               />
             </FormControl>
