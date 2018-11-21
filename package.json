@@ -29,13 +29,13 @@
     "typescript": "^3.1.6"
   },
   "dependencies": {
-    "@material-ui/core": "^3.5.1",
-    "@material-ui/icons": "^3.0.1",
     "@types/react-router-dom": "^4.3.1",
     "electron-rebuild": "^1.8.2",
     "keytar": "^4.3.0",
+    "office-ui-fabric-react": "^6.106.1",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
+    "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1"
   }
 }

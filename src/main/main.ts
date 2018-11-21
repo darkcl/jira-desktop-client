@@ -6,8 +6,6 @@ import { KeychainManger } from "./utils/keychain";
 
 let mainWindow: Electron.BrowserWindow;
 
-require("electron-reload")(__dirname);
-
 function createWindow() {
   // Create the browser window.
   mainWindow = new BrowserWindow({
