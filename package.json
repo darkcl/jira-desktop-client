@@ -17,6 +17,7 @@
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^10.12.6",
+    "@types/node-fetch": "^2.1.4",
     "@types/react": "^16.7.3",
     "@types/react-dom": "^16.0.9",
     "@types/styled-components": "^4.1.0",
@@ -31,8 +32,11 @@
   },
   "dependencies": {
     "@types/react-router-dom": "^4.3.1",
+    "atob": "^2.1.2",
+    "btoa": "^1.2.1",
     "electron-rebuild": "^1.8.2",
     "keytar": "^4.3.0",
+    "node-fetch": "^2.3.0",
     "office-ui-fabric-react": "^6.106.1",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",

@@ -1,39 +1,66 @@
 import * as React from "react";
 import Board from "react-trello";
+import { ipcRenderer } from "electron";
 
-const data = {
-  lanes: [
-    {
-      id: "lane1",
-      title: "Planned Tasks",
-      label: "2/2",
-      cards: [
-        {
-          id: "Card1",
-          title: "Write Blog",
-          description: "Can AI make memes",
-          label: "30 mins"
-        },
-        {
-          id: "Card2",
-          title: "Pay Rent",
-          description: "Transfer via NEFT",
-          label: "5 mins",
-          metadata: { sha: "be312a1" }
-        }
-      ]
-    },
-    {
-      id: "lane2",
-      title: "Completed",
-      label: "0/0",
-      cards: []
+interface BoardState {
+  host: string;
+  data: any;
+  isLoad: boolean;
+}
+
+export class BoardPage extends React.Component<{}, BoardState> {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isLoad: false,
+      host: "",
+      data: {
+        lanes: [
+          {
+            id: "lane1",
+            title: "Todo",
+            label: "",
+            cards: []
+          },
+          {
+            id: "lane2",
+            title: "In Progress",
+            label: "",
+            cards: []
+          },
+          {
+            id: "lane3",
+            title: "Completed",
+            label: "",
+            cards: []
+          }
+        ]
+      }
+    };
+  }
+
+  componentDidMount() {
+    const { data, host } = ipcRenderer.sendSync("request-issue");
+
+    if (data !== undefined) {
+      this.setState({ data, host });
     }
-  ]
-};
+  }
 
-export class BoardPage extends React.Component {
   render() {
-    return <Board data={data} draggable={true} />;
+    return (
+      <Board
+        data={this.state.data}
+        draggable={false}
+        onCardClick={(cardId, metadata, laneId) =>
+          this.handleCardClick(cardId, metadata, laneId)
+        }
+      />
+    );
+  }
+  handleCardClick(cardId, metadata, laneId): any {
+    require("electron").shell.openExternal(
+      `${this.state.host}/browse/${cardId}`
+    );
   }
 }
