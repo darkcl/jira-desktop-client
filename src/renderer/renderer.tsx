@@ -3,7 +3,10 @@ import * as ReactDOM from "react-dom";
 
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
-import { SignInPage } from "./pages";
+import { ThemeProvider } from "./theme";
+
+import { BoardPage } from "./pages";
+import ThemeInterface from "./theme/theme";
 
 const About = () => <h2>About</h2>;
 const Users = () => <h2>Users</h2>;
@@ -26,7 +29,7 @@ function AppRouter() {
           </ul>
         </nav>
 
-        <Route path="/" exact component={SignInPage} />
+        <Route path="/" exact component={BoardPage} />
         <Route path="/about/" component={About} />
         <Route path="/users/" component={Users} />
       </div>
@@ -34,4 +37,14 @@ function AppRouter() {
   );
 }
 
-ReactDOM.render(<SignInPage />, document.querySelector("#app"));
+const theme: ThemeInterface = {
+  primaryColor: "red",
+  primaryColorInverted: "green"
+};
+
+ReactDOM.render(
+  <ThemeProvider theme={theme}>
+    <BoardPage />
+  </ThemeProvider>,
+  document.querySelector("#app")
+);
