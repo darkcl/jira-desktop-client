@@ -1,6 +1,11 @@
 import * as React from "react";
 import Board from "react-trello";
-import { CommandBar } from "office-ui-fabric-react";
+import {
+  CommandBar,
+  Spinner,
+  Label,
+  SpinnerSize
+} from "office-ui-fabric-react";
 
 import { ipcRenderer, clipboard, shell } from "electron";
 
@@ -42,11 +47,14 @@ export class BoardPage extends React.Component<{}, BoardState> {
   }
 
   componentDidMount() {
-    const { data, host } = ipcRenderer.sendSync("request-issue");
+    ipcRenderer.send("request-issue");
 
-    if (data !== undefined) {
-      this.setState({ data, host });
-    }
+    ipcRenderer.on("response-issue", (event, payload) => {
+      const { data, host } = payload;
+      if (data !== undefined) {
+        this.setState({ data, host, isLoad: true });
+      }
+    });
   }
 
   // Data for CommandBar
@@ -102,13 +110,25 @@ export class BoardPage extends React.Component<{}, BoardState> {
             "Use left and right arrow keys to navigate between commands"
           }
         />
-        <Board
-          data={this.state.data}
-          draggable={false}
-          onCardClick={(cardId, metadata, laneId) =>
-            this.handleCardClick(cardId, metadata, laneId)
-          }
-        />
+        {this.state.isLoad && (
+          <Board
+            data={this.state.data}
+            draggable={false}
+            onCardClick={(cardId, metadata, laneId) =>
+              this.handleCardClick(cardId, metadata, laneId)
+            }
+          />
+        )}
+        {!this.state.isLoad && (
+          <div>
+            <Label />
+            <Spinner
+              size={SpinnerSize.large}
+              label="Seriously, it is still loading..."
+              ariaLive="assertive"
+            />
+          </div>
+        )}
       </div>
     );
   }

@@ -79,7 +79,7 @@ ipcMain.on("request-issue", async (event, payload) => {
     const end = new Date();
     console.log(`Load time: ${end.getTime() - start.getTime()}`);
     const token = new Token();
-    event.returnValue = { data, host: token.host };
+    mainWindow.webContents.send("response-issue", { data, host: token.host });
   } catch (e) {
     console.log(e);
     event.returnValue = "error";
