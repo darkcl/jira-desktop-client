@@ -3,7 +3,6 @@ import { app, BrowserWindow, ipcMain } from "electron";
 import * as path from "path";
 import * as url from "url";
 import { KeychainManger } from "./utils/keychain";
-import { JIRA, JIRARequest } from "./utils/jira-client";
 import { Token } from "./token";
 import { BoardController } from "./controller";
 

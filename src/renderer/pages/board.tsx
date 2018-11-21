@@ -1,6 +1,8 @@
 import * as React from "react";
 import Board from "react-trello";
-import { ipcRenderer } from "electron";
+import { CommandBar } from "office-ui-fabric-react";
+
+import { ipcRenderer, clipboard, shell } from "electron";
 
 interface BoardState {
   host: string;
@@ -47,20 +49,71 @@ export class BoardPage extends React.Component<{}, BoardState> {
     }
   }
 
+  // Data for CommandBar
+  private getItems = () => {
+    return [
+      {
+        key: "components",
+        name: "Components",
+        cacheKey: "myCacheKey",
+        subMenuProps: {
+          items: [
+            {
+              key: "jobs-api",
+              name: "Jobs API"
+            },
+            {
+              key: "jobs-recruiter-web",
+              name: "Jobs Recruiter Web"
+            },
+            {
+              key: "jobs-web",
+              name: "Jobs Web"
+            },
+            {
+              key: "jobs-ios",
+              name: "Jobs iOS"
+            },
+            {
+              key: "jobs-aos",
+              name: "Jobs Android"
+            }
+          ]
+        }
+      },
+      {
+        key: "assignee",
+        name: "Assignee"
+      },
+      {
+        key: "refresh",
+        name: "Refresh",
+        onClick: () => console.log("Refresh")
+      }
+    ];
+  };
+
   render() {
     return (
-      <Board
-        data={this.state.data}
-        draggable={false}
-        onCardClick={(cardId, metadata, laneId) =>
-          this.handleCardClick(cardId, metadata, laneId)
-        }
-      />
+      <div>
+        <CommandBar
+          items={this.getItems()}
+          ariaLabel={
+            "Use left and right arrow keys to navigate between commands"
+          }
+        />
+        <Board
+          data={this.state.data}
+          draggable={false}
+          onCardClick={(cardId, metadata, laneId) =>
+            this.handleCardClick(cardId, metadata, laneId)
+          }
+        />
+      </div>
     );
   }
   handleCardClick(cardId, metadata, laneId): any {
-    require("electron").shell.openExternal(
-      `${this.state.host}/browse/${cardId}`
-    );
+    clipboard.writeText(cardId);
+    shell.openExternal(`${this.state.host}/browse/${cardId}`);
   }
 }
