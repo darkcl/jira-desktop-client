@@ -63,7 +63,6 @@ app.on("activate", () => {
 ipcMain.on("request-saved-token", async event => {
   const kc = new KeychainManger();
   const result = await kc.find();
-  console.log(result);
   if (result !== null && result !== undefined) {
     mainWindow.webContents.send("response-saved-token", { hasToken: true });
   } else {
@@ -82,6 +81,7 @@ ipcMain.on("save-auth", async (event, payload) => {
     password
   );
   mainWindow.webContents.send("response-save-auth", { error, session });
+  mainWindow.webContents.send("response-saved-token", { hasToken: true });
   event.returnValue = "OK";
 });
 

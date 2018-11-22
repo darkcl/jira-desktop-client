@@ -2,7 +2,6 @@ import * as React from "react";
 import { JIRALoginForm, Papper, LoadingIndicator } from "../components";
 
 import { ipcRenderer } from "electron";
-import { Redirect } from "react-router-dom";
 
 interface SignInProps {}
 
@@ -56,7 +55,6 @@ export class SignInPage extends React.Component<SignInProps, SignInState> {
   render() {
     return (
       <div style={this.backgroudStyle}>
-        {this.state.isLogin && <Redirect exact from="/" to="/board" />}
         <Papper>
           {this.state.isLoading ? (
             <LoadingIndicator />
