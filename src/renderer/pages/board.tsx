@@ -65,6 +65,7 @@ export class BoardPage extends React.Component<{}, BoardState> {
       <div style={fillScreen}>
         <JIRACommandBar
           isHidden={this.state.isLoading}
+          onLogout={() => {}}
           onRefresh={() => {
             ipcRenderer.send("request-issue");
             this.setState({ isLoading: true });

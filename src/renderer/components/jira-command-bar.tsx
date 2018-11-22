@@ -4,10 +4,21 @@ import { CommandBar, ICommandBarItemProps } from "office-ui-fabric-react";
 interface IJIRACommandBarProps {
   isHidden: boolean;
   onRefresh: () => any;
+  onLogout: () => any;
 }
 
 export class JIRACommandBar extends React.Component<IJIRACommandBarProps, {}> {
   // Data for CommandBar
+  private getFarItems(): ICommandBarItemProps[] {
+    return [
+      {
+        key: "logout",
+        name: "Logout",
+        onClick: () => this.props.onLogout()
+      }
+    ];
+  }
+
   private getItems(): ICommandBarItemProps[] {
     return [
       {
@@ -55,6 +66,7 @@ export class JIRACommandBar extends React.Component<IJIRACommandBarProps, {}> {
     return this.props.isHidden ? null : (
       <CommandBar
         items={this.getItems()}
+        farItems={this.getFarItems()}
         ariaLabel={"Use left and right arrow keys to navigate between commands"}
       />
     );

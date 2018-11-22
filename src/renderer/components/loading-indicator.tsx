@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Spinner, SpinnerSize } from "office-ui-fabric-react";
-import { centerStyle, fillContainer } from "../style";
+import { fillContainer } from "../style";
 
 export class LoadingIndicator extends React.Component {
   private containerStyle: React.CSSProperties = {
