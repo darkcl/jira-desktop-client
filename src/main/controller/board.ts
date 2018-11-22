@@ -1,14 +1,16 @@
-import { Token } from "../token";
-
 import { JIRA, JIRARequest } from "../utils/jira-client";
 import { BoardStatus, BoardResponse, BoardCard } from "../interfaces";
+import { LoginToken } from "../utils/keychain";
 
 export class BoardController {
   private boardId = "1390";
   private jira: JIRA;
-  constructor() {
-    const token = new Token();
-    this.jira = new JIRA(token.host, token.email, token.password);
+  constructor(private loginToken: LoginToken) {
+    this.jira = new JIRA(
+      this.loginToken.host,
+      this.loginToken.email,
+      this.loginToken.password
+    );
   }
 
   private async getListByStatus(status: BoardStatus): Promise<BoardCard[]> {

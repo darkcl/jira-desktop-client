@@ -3,7 +3,8 @@ export class JIRARequest {
   public method: string = "GET";
   public query: { [key: string]: string } = {};
   public header: { [key: string]: string } = {};
-  public body: any = {};
+  public body: any = null;
+  public isLoginRequired = true;
 
   public pathString(): string {
     if (Object.keys(this.query).length !== 0) {
@@ -16,6 +17,19 @@ export class JIRARequest {
     return Object.keys(this.query)
       .map(k => `${encodeURIComponent(k)}=${encodeURIComponent(this.query[k])}`)
       .join("&");
+  }
+
+  static createSession(email: string, password: string): JIRARequest {
+    const result = new JIRARequest();
+    result.path = "/rest/auth/1/session";
+    result.body = {
+      username: email,
+      password: password
+    };
+    result.isLoginRequired = false;
+    result.method = "POST";
+
+    return result;
   }
 
   static listBoardIssue(
@@ -34,6 +48,8 @@ export class JIRARequest {
     if (jql !== null && jql !== undefined) {
       result.query["jql"] = jql;
     }
+
+    result.isLoginRequired = true;
 
     return result;
   }

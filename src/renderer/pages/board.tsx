@@ -5,19 +5,19 @@ import { JIRACommandBar } from "../components";
 
 import { ipcRenderer, clipboard, shell } from "electron";
 import { LoadingIndicator } from "../components/loading-indicator";
-import { fillContainer, fillScreen } from "../style";
+import { fillScreen } from "../style";
 
 interface BoardState {
   host: string;
   data: any;
-  isLoad: boolean;
+  isLoading: boolean;
 }
 
 export class BoardPage extends React.Component<{}, BoardState> {
   constructor(props) {
     super(props);
     this.state = {
-      isLoad: true,
+      isLoading: true,
       host: "",
       data: {
         lanes: [
@@ -55,7 +55,7 @@ export class BoardPage extends React.Component<{}, BoardState> {
     ipcRenderer.on("response-issue", (event, payload) => {
       const { data, host } = payload;
       if (data !== undefined) {
-        this.setState({ data, host, isLoad: false });
+        this.setState({ data, host, isLoading: false });
       }
     });
   }
@@ -64,13 +64,13 @@ export class BoardPage extends React.Component<{}, BoardState> {
     return (
       <div style={fillScreen}>
         <JIRACommandBar
-          isHidden={this.state.isLoad}
+          isHidden={this.state.isLoading}
           onRefresh={() => {
             ipcRenderer.send("request-issue");
-            this.setState({ isLoad: true });
+            this.setState({ isLoading: true });
           }}
         />
-        {this.state.isLoad ? (
+        {this.state.isLoading ? (
           <LoadingIndicator />
         ) : (
           <Board

@@ -69,7 +69,7 @@ export class JIRALoginForm extends React.Component<JIRALoginFormProps, {}> {
         <div className="ms-Grid-row">
           <PrimaryButton
             text="Login"
-            onClick={event => this.props.onSubmit()}
+            onClick={() => this.props.onSubmit()}
             allowDisabledFocus={true}
           />
         </div>

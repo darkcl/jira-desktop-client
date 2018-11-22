@@ -2,9 +2,8 @@ import { app, BrowserWindow, ipcMain } from "electron";
 
 import * as path from "path";
 import * as url from "url";
+import { BoardController, SignInController } from "./controller";
 import { KeychainManger } from "./utils/keychain";
-import { Token } from "./token";
-import { BoardController } from "./controller";
 
 let mainWindow: Electron.BrowserWindow;
 
@@ -61,25 +60,41 @@ app.on("activate", () => {
   }
 });
 
-ipcMain.on("save-auth", (event, payload) => {
-  const keychainManager: KeychainManger = new KeychainManger(
-    payload.host,
-    payload.email,
-    payload.password
+ipcMain.on("request-saved-token", async event => {
+  const kc = new KeychainManger();
+  const result = await kc.find();
+  console.log(result);
+  if (result !== null && result !== undefined) {
+    mainWindow.webContents.send("response-saved-token", { hasToken: true });
+  } else {
+    mainWindow.webContents.send("response-saved-token", { hasToken: false });
+  }
+
+  event.returnValue = "OK";
+});
+
+ipcMain.on("save-auth", async (event, payload) => {
+  const signInController = new SignInController();
+  const { host, email, password } = payload;
+  const { error, session } = await signInController.signIn(
+    `https://${host}`,
+    email,
+    password
   );
-  keychainManager.save();
+  mainWindow.webContents.send("response-save-auth", { error, session });
   event.returnValue = "OK";
 });
 
 ipcMain.on("request-issue", async (event, payload) => {
-  const boardController = new BoardController();
+  const kc = new KeychainManger();
+  const login = await kc.find();
+  const boardController = new BoardController(login);
   try {
     const start = new Date();
     const data = await boardController.getTickets();
     const end = new Date();
     console.log(`Load time: ${end.getTime() - start.getTime()}`);
-    const token = new Token();
-    mainWindow.webContents.send("response-issue", { data, host: token.host });
+    mainWindow.webContents.send("response-issue", { data, host: login.host });
   } catch (e) {
     console.log(e);
     event.returnValue = "error";
