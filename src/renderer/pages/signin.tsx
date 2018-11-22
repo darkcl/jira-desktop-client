@@ -1,5 +1,5 @@
 import * as React from "react";
-import { TextField, PrimaryButton } from "office-ui-fabric-react";
+import { JIRALoginForm, Papper, LoadingIndicator } from "../components";
 
 import { ipcRenderer } from "electron";
 
@@ -21,9 +21,14 @@ export class SignInPage extends React.Component<SignInProps, SignInState> {
     };
   }
 
+  private backgroudStyle: React.CSSProperties = {
+    backgroundColor: "#4286f4",
+    width: "100vw",
+    height: "100vh"
+  };
+
   handleChange(event) {
     if (event.target.id === "host") {
-      this.setState({ host: event.target.value });
     } else if (event.target.id === "email") {
       this.setState({ email: event.target.value });
     } else if (event.target.id === "password") {
@@ -33,40 +38,30 @@ export class SignInPage extends React.Component<SignInProps, SignInState> {
 
   render() {
     return (
-      <div className="docs-TextFieldExample">
-        <TextField
-          id="host"
-          value={this.state.host}
-          label="JIRA Host"
-          required={true}
-          onChange={event => this.handleChange(event)}
-        />
-        <TextField
-          id="email"
-          value={this.state.email}
-          label="Email"
-          required={true}
-          onChange={event => this.handleChange(event)}
-        />
-        <TextField
-          id="password"
-          value={this.state.password}
-          label="Password"
-          required={true}
-          type="password"
-          onChange={event => this.handleChange(event)}
-        />
-        <PrimaryButton
-          text="Login"
-          onClick={event => this.handleSubmit(event)}
-          allowDisabledFocus={true}
-        />
+      <div style={this.backgroudStyle}>
+        <Papper>
+          <JIRALoginForm
+            host={this.state.host}
+            email={this.state.email}
+            password={this.state.password}
+            onEmailChanged={email => {
+              this.setState({ email });
+            }}
+            onHostChanged={host => {
+              this.setState({ host });
+            }}
+            onPasswordChanged={password => {
+              this.setState({ password });
+            }}
+            onSubmit={this.handleSubmit}
+          />
+        </Papper>
       </div>
     );
   }
 
-  handleSubmit(event): void {
+  handleSubmit(): void {
     console.log(this.state);
-    ipcRenderer.sendSync("save-auth", this.state);
+    // ipcRenderer.sendSync("save-auth", this.state);
   }
 }

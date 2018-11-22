@@ -99,6 +99,16 @@
     "@types/react" "*"
     csstype "^2.2.0"
 
+"@uifabric/fluent-theme@^0.7.0":
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/@uifabric/fluent-theme/-/fluent-theme-0.7.0.tgz#579f95ded481a5af08ef359cd9942b01e235cb68"
+  dependencies:
+    "@uifabric/merge-styles" "^6.15.0"
+    "@uifabric/set-version" ">=1.1.3 <2.0.0"
+    "@uifabric/variants" ">=6.12.0 <7.0.0"
+    office-ui-fabric-react ">=6.106.0 <7.0.0"
+    tslib "^1.7.1"
+
 "@uifabric/icons@>=6.3.0 <7.0.0":
   version "6.3.0"
   resolved "https://registry.yarnpkg.com/@uifabric/icons/-/icons-6.3.0.tgz#746ab60e24912cfb019edb7db8c38be3f4421778"
@@ -107,7 +117,7 @@
     "@uifabric/styling" ">=6.35.0 <7.0.0"
     tslib "^1.7.1"
 
-"@uifabric/merge-styles@>=6.15.0 <7.0.0":
+"@uifabric/merge-styles@>=6.15.0 <7.0.0", "@uifabric/merge-styles@^6.15.0":
   version "6.15.0"
   resolved "https://registry.yarnpkg.com/@uifabric/merge-styles/-/merge-styles-6.15.0.tgz#a68b514a03c9049d1c665a9fc07f58ac62c0432b"
   dependencies:
@@ -137,6 +147,14 @@
     "@uifabric/merge-styles" ">=6.15.0 <7.0.0"
     "@uifabric/set-version" ">=1.1.3 <2.0.0"
     prop-types "^15.5.10"
+    tslib "^1.7.1"
+
+"@uifabric/variants@>=6.12.0 <7.0.0":
+  version "6.12.0"
+  resolved "https://registry.yarnpkg.com/@uifabric/variants/-/variants-6.12.0.tgz#20f5f4673d014f148c736ee9baef38dec7b2012d"
+  dependencies:
+    "@uifabric/set-version" ">=1.1.3 <2.0.0"
+    office-ui-fabric-react ">=6.90.0 <7.0.0"
     tslib "^1.7.1"
 
 abbrev@1:
@@ -1788,6 +1806,19 @@ object.pick@^1.3.0:
   resolved "https://registry.yarnpkg.com/object.pick/-/object.pick-1.3.0.tgz#87a10ac4c1694bd2e1cbf53591a66141fb5dd747"
   dependencies:
     isobject "^3.0.1"
+
+"office-ui-fabric-react@>=6.106.0 <7.0.0", "office-ui-fabric-react@>=6.90.0 <7.0.0":
+  version "6.106.2"
+  resolved "https://registry.yarnpkg.com/office-ui-fabric-react/-/office-ui-fabric-react-6.106.2.tgz#e3ac382c7bdbd69c60d07563c855632532c42117"
+  dependencies:
+    "@microsoft/load-themed-styles" "^1.7.13"
+    "@uifabric/icons" ">=6.3.0 <7.0.0"
+    "@uifabric/merge-styles" ">=6.15.0 <7.0.0"
+    "@uifabric/set-version" ">=1.1.3 <2.0.0"
+    "@uifabric/styling" ">=6.35.0 <7.0.0"
+    "@uifabric/utilities" ">=6.27.0 <7.0.0"
+    prop-types "^15.5.10"
+    tslib "^1.7.1"
 
 office-ui-fabric-react@^6.106.1:
   version "6.106.1"

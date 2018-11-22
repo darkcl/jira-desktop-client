@@ -32,6 +32,7 @@
   },
   "dependencies": {
     "@types/react-router-dom": "^4.3.1",
+    "@uifabric/fluent-theme": "^0.7.0",
     "atob": "^2.1.2",
     "btoa": "^1.2.1",
     "electron-rebuild": "^1.8.2",

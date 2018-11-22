@@ -1,13 +1,11 @@
 import * as React from "react";
 import Board from "react-trello";
-import {
-  CommandBar,
-  Spinner,
-  Label,
-  SpinnerSize
-} from "office-ui-fabric-react";
+
+import { JIRACommandBar } from "../components";
 
 import { ipcRenderer, clipboard, shell } from "electron";
+import { LoadingIndicator } from "../components/loading-indicator";
+import { fillContainer, fillScreen } from "../style";
 
 interface BoardState {
   host: string;
@@ -19,7 +17,7 @@ export class BoardPage extends React.Component<{}, BoardState> {
   constructor(props) {
     super(props);
     this.state = {
-      isLoad: false,
+      isLoad: true,
       host: "",
       data: {
         lanes: [
@@ -46,71 +44,35 @@ export class BoardPage extends React.Component<{}, BoardState> {
     };
   }
 
+  handleCardClick(cardId, metadata, laneId): any {
+    clipboard.writeText(cardId);
+    shell.openExternal(`${this.state.host}/browse/${cardId}`);
+  }
+
   componentDidMount() {
     ipcRenderer.send("request-issue");
 
     ipcRenderer.on("response-issue", (event, payload) => {
       const { data, host } = payload;
       if (data !== undefined) {
-        this.setState({ data, host, isLoad: true });
+        this.setState({ data, host, isLoad: false });
       }
     });
   }
 
-  // Data for CommandBar
-  private getItems = () => {
-    return [
-      {
-        key: "components",
-        name: "Components",
-        cacheKey: "myCacheKey",
-        subMenuProps: {
-          items: [
-            {
-              key: "jobs-api",
-              name: "Jobs API"
-            },
-            {
-              key: "jobs-recruiter-web",
-              name: "Jobs Recruiter Web"
-            },
-            {
-              key: "jobs-web",
-              name: "Jobs Web"
-            },
-            {
-              key: "jobs-ios",
-              name: "Jobs iOS"
-            },
-            {
-              key: "jobs-aos",
-              name: "Jobs Android"
-            }
-          ]
-        }
-      },
-      {
-        key: "assignee",
-        name: "Assignee"
-      },
-      {
-        key: "refresh",
-        name: "Refresh",
-        onClick: () => console.log("Refresh")
-      }
-    ];
-  };
-
   render() {
     return (
-      <div>
-        <CommandBar
-          items={this.getItems()}
-          ariaLabel={
-            "Use left and right arrow keys to navigate between commands"
-          }
+      <div style={fillScreen}>
+        <JIRACommandBar
+          isHidden={this.state.isLoad}
+          onRefresh={() => {
+            ipcRenderer.send("request-issue");
+            this.setState({ isLoad: true });
+          }}
         />
-        {this.state.isLoad && (
+        {this.state.isLoad ? (
+          <LoadingIndicator />
+        ) : (
           <Board
             data={this.state.data}
             draggable={false}
@@ -119,21 +81,7 @@ export class BoardPage extends React.Component<{}, BoardState> {
             }
           />
         )}
-        {!this.state.isLoad && (
-          <div>
-            <Label />
-            <Spinner
-              size={SpinnerSize.large}
-              label="Seriously, it is still loading..."
-              ariaLive="assertive"
-            />
-          </div>
-        )}
       </div>
     );
-  }
-  handleCardClick(cardId, metadata, laneId): any {
-    clipboard.writeText(cardId);
-    shell.openExternal(`${this.state.host}/browse/${cardId}`);
   }
 }
