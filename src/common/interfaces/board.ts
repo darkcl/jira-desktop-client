@@ -1,5 +1,5 @@
 export enum BoardStatus {
-  ToDo = "1",
+  ToDo = "Open",
   InProgress = "In Progress",
   Done = "Done"
 }

@@ -7,6 +7,7 @@ import {
   BoardAssignee
 } from "../../common/interfaces";
 import { LoginToken } from "../utils/keychain";
+import { JIRAQuery } from "../utils/jira-client/JIRAQuery";
 
 export class BoardController {
   private boardId = "1390";
@@ -19,11 +20,29 @@ export class BoardController {
     );
   }
 
-  private async getListByStatus(status: BoardStatus): Promise<BoardCard[]> {
+  private async getListByStatus(
+    status: BoardStatus,
+    assignee?: string,
+    component?: string
+  ): Promise<BoardCard[]> {
+    const jql = new JIRAQuery();
+    const query = jql
+      .and()
+      .currentSprint()
+      .status(status);
+
+    if (assignee !== null && assignee !== undefined) {
+      query.assignee(assignee);
+    }
+
+    if (component !== null && component !== undefined) {
+      query.component(component);
+    }
+
     const req = JIRARequest.listBoardIssue(
       this.boardId,
-      ["description", "status"],
-      `sprint in openSprints() AND assignee=currentUser() AND status='${status}' AND component='Jobs API'`
+      ["summary", "description", "status"],
+      jql.build()
     );
     const res = await this.jira.sendRequest(req);
 
@@ -31,7 +50,7 @@ export class BoardController {
       return <BoardCard>{
         id: val.key,
         title: val.key,
-        description: val.fields.description,
+        description: `${val.fields.summary}\n${val.fields.description}`,
         label: status
       };
     });
@@ -94,10 +113,25 @@ export class BoardController {
     }
   }
 
-  async getTickets(): Promise<BoardResponse> {
-    const todoList = await this.getListByStatus(BoardStatus.ToDo);
-    const inProgressList = await this.getListByStatus(BoardStatus.InProgress);
-    const doneList = await this.getListByStatus(BoardStatus.Done);
+  async getTickets(
+    component?: string,
+    assignee?: string
+  ): Promise<BoardResponse> {
+    const todoList = await this.getListByStatus(
+      BoardStatus.ToDo,
+      assignee,
+      component
+    );
+    const inProgressList = await this.getListByStatus(
+      BoardStatus.InProgress,
+      assignee,
+      component
+    );
+    const doneList = await this.getListByStatus(
+      BoardStatus.Done,
+      assignee,
+      component
+    );
 
     return <BoardResponse>{
       lanes: [

@@ -14,12 +14,16 @@ interface BoardState {
   isLoading: boolean;
   components: BoardComponent[];
   assignees: BoardAssignee[];
+  selectedComp: string;
+  selectedAssignee: string;
 }
 
 export class BoardPage extends React.Component<{}, BoardState> {
   constructor(props) {
     super(props);
     this.state = {
+      selectedComp: null,
+      selectedAssignee: null,
       components: [],
       assignees: [],
       isLoading: true,
@@ -55,7 +59,7 @@ export class BoardPage extends React.Component<{}, BoardState> {
   }
 
   componentDidMount() {
-    ipcRenderer.send("request-issue");
+    this.refreshBoard();
     ipcRenderer.send("request-components");
     ipcRenderer.send("request-assignee");
 
@@ -69,6 +73,8 @@ export class BoardPage extends React.Component<{}, BoardState> {
     ipcRenderer.on("response-components", (event, payload) => {
       const { components } = payload;
       if (components !== undefined) {
+        const allComp = { id: "all-component", name: "All Component" };
+        components.push(allComp);
         this.setState({ components });
       }
     });
@@ -76,8 +82,25 @@ export class BoardPage extends React.Component<{}, BoardState> {
     ipcRenderer.on("response-assignee", (event, payload) => {
       const { assignees } = payload;
       if (assignees !== undefined) {
+        const allAssignee = {
+          key: "all-assignee",
+          displayName: "All Assignee"
+        };
+        assignees.push(allAssignee);
         this.setState({ assignees });
       }
+    });
+  }
+
+  refreshBoard() {
+    this.setState({ isLoading: true });
+    console.log({
+      assignee: this.state.selectedAssignee,
+      component: this.state.selectedComp
+    });
+    ipcRenderer.send("request-issue", {
+      assignee: this.state.selectedAssignee,
+      component: this.state.selectedComp
     });
   }
 
@@ -90,14 +113,33 @@ export class BoardPage extends React.Component<{}, BoardState> {
           isHidden={this.state.isLoading}
           onLogout={() => {}}
           onRefresh={() => {
-            ipcRenderer.send("request-issue");
-            this.setState({ isLoading: true });
+            this.setState(
+              {
+                selectedAssignee: null,
+                selectedComp: null
+              },
+              () => {
+                this.refreshBoard();
+              }
+            );
           }}
           onComponentsItemClick={(id, name) => {
             console.log(`${id}: ${name}`);
+            this.setState(
+              { selectedComp: id !== "all-comp" ? name : null },
+              () => {
+                this.refreshBoard();
+              }
+            );
           }}
           onAssigneeItemClick={(idx, key) => {
             console.log(`${idx}: ${key}`);
+            this.setState(
+              { selectedAssignee: key !== "all-assignee" ? key : null },
+              () => {
+                this.refreshBoard();
+              }
+            );
           }}
         />
         {this.state.isLoading ? (

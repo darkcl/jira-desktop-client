@@ -89,9 +89,13 @@ ipcMain.on("request-issue", async (event, payload) => {
   const kc = new KeychainManger();
   const login = await kc.find();
   const boardController = new BoardController(login);
+
+  const { assignee, component } = payload;
+  console.log(payload);
+
   try {
     const start = new Date();
-    const data = await boardController.getTickets();
+    const data = await boardController.getTickets(component, assignee);
     const end = new Date();
     console.log(`Load time: ${end.getTime() - start.getTime()}`);
     mainWindow.webContents.send("response-issue", { data, host: login.host });
