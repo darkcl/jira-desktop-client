@@ -1,5 +1,11 @@
 import { JIRA, JIRARequest } from "../utils/jira-client";
-import { BoardStatus, BoardResponse, BoardCard } from "../interfaces";
+import {
+  BoardStatus,
+  BoardResponse,
+  BoardCard,
+  BoardComponent,
+  BoardAssignee
+} from "../../common/interfaces";
 import { LoginToken } from "../utils/keychain";
 
 export class BoardController {
@@ -30,6 +36,62 @@ export class BoardController {
       };
     });
     return cards;
+  }
+
+  async getAssignee(): Promise<BoardAssignee[]> {
+    const req = JIRARequest.listBoardIssue(
+      this.boardId,
+      ["assignee"],
+      `sprint in openSprints()`
+    );
+    const res = await this.jira.sendRequest(req);
+    try {
+      const assigneeMap: { [key: string]: BoardAssignee } = res.issues
+        .map(val => val.fields.assignee)
+        .filter(val => val !== undefined && val !== null)
+        .reduce((map, assignee) => {
+          map[assignee.key] = <BoardAssignee>{
+            key: assignee.key,
+            name: assignee.name,
+            avatarUrls: assignee.avatarUrls,
+            displayName: assignee.displayName
+          };
+          return map;
+        }, {});
+      const result: BoardAssignee[] = Object.keys(assigneeMap).map(
+        val => assigneeMap[val]
+      );
+      return result;
+    } catch (e) {
+      return [];
+    }
+  }
+
+  async getComponents(): Promise<BoardComponent[]> {
+    const req = JIRARequest.listBoardIssue(
+      this.boardId,
+      ["components"],
+      `sprint in openSprints()`
+    );
+    const res = await this.jira.sendRequest(req);
+    const compMap: { [key: string]: BoardComponent } = {};
+    try {
+      res.issues.forEach(val =>
+        val.fields.components.forEach(
+          comp =>
+            (compMap[comp.id] = <BoardComponent>{
+              id: comp.id,
+              name: comp.name
+            })
+        )
+      );
+      const result: BoardComponent[] = Object.keys(compMap).map(
+        val => compMap[val]
+      );
+      return result;
+    } catch (e) {
+      return [];
+    }
   }
 
   async getTickets(): Promise<BoardResponse> {

@@ -22,3 +22,16 @@ export interface BoardLane {
 export interface BoardResponse {
   lanes: BoardLane[];
 }
+
+export interface BoardComponent {
+  id: string;
+  name: string;
+}
+
+export interface BoardAssignee {
+  key: string;
+  name: string;
+  emailAddress: string;
+  avatarUrls: { [key: string]: string };
+  displayName: string;
+}

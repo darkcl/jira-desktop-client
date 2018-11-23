@@ -1,6 +1,6 @@
 import { JIRA, JIRARequest } from "../utils/jira-client";
 
-import { SignInResponse } from "../interfaces";
+import { SignInResponse } from "../../common/interfaces";
 import { KeychainManger } from "../utils/keychain";
 
 export class SignInController {

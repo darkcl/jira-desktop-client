@@ -27,7 +27,7 @@ function createWindow() {
   );
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools();
 
   // Emitted when the window is closed.
   mainWindow.on("closed", () => {
@@ -95,6 +95,38 @@ ipcMain.on("request-issue", async (event, payload) => {
     const end = new Date();
     console.log(`Load time: ${end.getTime() - start.getTime()}`);
     mainWindow.webContents.send("response-issue", { data, host: login.host });
+  } catch (e) {
+    console.log(e);
+    event.returnValue = "error";
+  }
+});
+
+ipcMain.on("request-components", async (event, payload) => {
+  const kc = new KeychainManger();
+  const login = await kc.find();
+  const boardController = new BoardController(login);
+  try {
+    const start = new Date();
+    const components = await boardController.getComponents();
+    const end = new Date();
+    console.log(`Load time: ${end.getTime() - start.getTime()}`);
+    mainWindow.webContents.send("response-components", { components });
+  } catch (e) {
+    console.log(e);
+    event.returnValue = "error";
+  }
+});
+
+ipcMain.on("request-assignee", async (event, payload) => {
+  const kc = new KeychainManger();
+  const login = await kc.find();
+  const boardController = new BoardController(login);
+  try {
+    const start = new Date();
+    const assignees = await boardController.getAssignee();
+    const end = new Date();
+    console.log(`Load time: ${end.getTime() - start.getTime()}`);
+    mainWindow.webContents.send("response-assignee", { assignees });
   } catch (e) {
     console.log(e);
     event.returnValue = "error";

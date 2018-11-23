@@ -7,7 +7,7 @@
     "build": "tsc -p ./; cp ./src/renderer/index.html ./dist/main/index.html",
     "start": "electron ./dist/main/main.js",
     "watch": "tsc -p ./ -w",
-    "package": "tsc -p ./"
+    "dist": "tsc -p ./; cp ./src/renderer/index.html ./dist/main/index.html;electron-packager ."
   },
   "repository": "",
   "keywords": [
@@ -22,6 +22,9 @@
     "@types/react-dom": "^16.0.9",
     "@types/styled-components": "^4.1.0",
     "electron": "^3.0.9",
+    "electron-builder": "^20.36.2",
+    "electron-packager": "^12.2.0",
+    "electron-rebuild": "^1.8.2",
     "electron-reload": "^1.3.0",
     "node-sass": "^4.10.0",
     "prettier": "^1.15.2",
@@ -35,7 +38,6 @@
     "@uifabric/fluent-theme": "^0.7.0",
     "atob": "^2.1.2",
     "btoa": "^1.2.1",
-    "electron-rebuild": "^1.8.2",
     "keytar": "^4.3.0",
     "node-fetch": "^2.3.0",
     "office-ui-fabric-react": "^6.106.1",
@@ -45,5 +47,11 @@
     "react-router-dom": "^4.3.1",
     "react-trello": "^2.0.4",
     "styled-components": "^4.1.1"
+  },
+  "build": {
+    "appId": "com.darkcl.jira-desktop-client",
+    "mac": {
+      "category": "public.app-category.developer-tools"
+    }
   }
 }
